@@ -1,4 +1,4 @@
-# Track Token Usage in Agentic Conversations
+# Track Agent Token Usage
 
 <Note>
   For more information about building agents, check out the
