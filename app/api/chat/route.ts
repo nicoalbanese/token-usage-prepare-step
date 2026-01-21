@@ -21,10 +21,9 @@ export async function POST(req: Request) {
   return result.toUIMessageStreamResponse<AgentUIMessage>({
     messageMetadata: ({ part }) => {
       if (part.type === "finish-step") {
+        // we want to get the most recent input tokens from a single step
+        // this gives us a good proxy for current context usage for subsequent steps
         return { usage: part.usage };
-      }
-      if (part.type === "finish") {
-        return { usage: part.totalUsage };
       }
     },
   });

@@ -2,6 +2,7 @@ import {
   type InferAgentUIMessage,
   type LanguageModelUsage,
   ToolLoopAgent,
+  tool,
 } from "ai";
 import { z } from "zod";
 
@@ -14,6 +15,16 @@ export const agent = new ToolLoopAgent({
   callOptionsSchema: z.object({
     lastInputTokens: z.number(),
   }),
+  tools: {
+    greet: tool({
+      description: "Greets a person by their name.",
+      inputSchema: z.object({ name: z.string() }),
+      execute: async ({ name }) => {
+        console.log(`Hello, ${name}!`);
+        return `Greeted ${name}`;
+      },
+    }),
+  },
   prepareStep: ({ steps, experimental_context }) => {
     const lastStep = steps.at(-1);
     const lastStepUsage =

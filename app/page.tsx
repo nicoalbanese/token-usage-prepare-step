@@ -12,29 +12,35 @@ export default function Chat() {
   return (
     <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
       <div className="space-y-4">
-        {messages.map((m) =>
-          m.parts.map((p, i) => {
-            switch (p.type) {
-              case "text":
-                return (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: don't feel like it
-                  <div key={i} className="whitespace-pre-wrap">
-                    <div>
-                      <div className="font-bold">{m.role}</div>
-                      <p>{p.text}</p>
-                      {m.metadata?.usage && (
-                        <div className="text-xs text-gray-500">
-                          Input tokens: {m.metadata.usage.inputTokens}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              default:
-                return null;
-            }
-          }),
-        )}
+        {messages.map((m) => (
+          <div key={m.id} className="whitespace-pre-wrap">
+            <div className="font-bold">{m.role}</div>
+            {m.parts.map((p, i) => {
+              switch (p.type) {
+                case "text":
+                  return <p key={i}>{p.text}</p>;
+                case "tool-greet":
+                  return (
+                    <p key={i} className="italic">
+                      [Tool: Greet{" "}
+                      {p.state === "input-available" ||
+                      p.state === "output-available"
+                        ? p.input.name
+                        : "executing..."}
+                      ]
+                    </p>
+                  );
+                default:
+                  return null;
+              }
+            })}
+            {m.metadata?.usage && (
+              <div className="text-xs text-gray-500">
+                Input token usage: {m.metadata.usage.inputTokens}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       <form
